@@ -38,11 +38,13 @@ mod = "mod4"
 terminal = "alacritty"
 browser = "firefox"
 
+home = os.path.expanduser('~')
 	#Autostart
 
 @hook.subscribe.startup_once
 def autostart():
 	subprocess.run(['xset', '-b'])
+    #subprocess.call(['/home/r3xye/.config/qtile/autostart.sh'])
 	subprocess.Popen(["picom", "--daemon"])
 
     # A list of available commands that can be bound to keys can be found
@@ -192,8 +194,7 @@ screens = [
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
        # background="#000000",
-        wallpaper="/home/r3xye/wallpapers/1.jpg",
-        
+        wallpaper="/home/r3xye/wallpapers/1.png",
         wallpaper_mode="fill",
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
