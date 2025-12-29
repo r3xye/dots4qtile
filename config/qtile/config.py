@@ -43,9 +43,8 @@ home = os.path.expanduser('~')
 
 @hook.subscribe.startup_once
 def autostart():
-	subprocess.run(['xset', '-b'])
-    #subprocess.call(['/home/r3xye/.config/qtile/autostart.sh'])
-	subprocess.Popen(["picom", "--daemon"])
+        subprocess.run(['xset', '-b'])
+        subprocess.Popen(["picom", "--daemon"])
 
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
@@ -143,14 +142,25 @@ for i in groups:
         ]
     )
 
+active_border_colors = ["#1a1f7a", "#2c2085", "#3a0f5f"]
+inactive_border_colors = ["#0f0f3a", "#1a0f3e", "#200a40"]
+
+
+layout_theme = {
+    "border_width": 4,
+    "margin": 1,
+    "border_focus": "#3a0f5e",  # Focus color (e.g., blue)
+    "border_normal": "#200a40"  # Normal color (e.g., darker blue)
+}
+
 layouts = [
-    layout.Columns(border_focus_stack=["#021298"], border_width=4),
-    layout.Max(),
+    layout.Columns(**layout_theme), 
+    #layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
-    # layout.MonadTall(),
+    layout.MonadTall(**layout_theme),
     # layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
@@ -171,6 +181,7 @@ screens = [
     Screen(
         top=bar.Bar(
             [
+#                background="#123",
                 widget.CurrentLayout(),
                 widget.GroupBox(),
                 widget.Prompt(),

@@ -22,6 +22,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+ typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
