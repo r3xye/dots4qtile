@@ -1,3 +1,5 @@
+print("a**x - a to the power x \na**(1/x) - root x of the number a \nexit - exit from calculator ")
+
 while True:
     try:
         expression = input(">>> ")
