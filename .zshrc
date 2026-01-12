@@ -102,6 +102,9 @@ source $ZSH/oh-my-zsh.sh
 # export ARCHFLAGS="-arch $(uname -m)"
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
+alias calc="python3 ~/.config/qtile/scripts/calculator.py"
+
+
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
 # users are encouraged to define aliases within a top-level file in
 # the $ZSH_CUSTOM folder, with .zsh extension. Examples:

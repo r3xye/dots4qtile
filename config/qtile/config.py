@@ -200,7 +200,7 @@ screens = [
             28,
             background="#1c1f24"
         ),
-        wallpaper="/home/r3xye/wallpapers/1.png",
+        wallpaper="/home/r3xye/wallpapers/1.jpg",
         wallpaper_mode="fill",
     ),
 ]
