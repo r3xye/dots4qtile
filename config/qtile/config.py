@@ -117,8 +117,8 @@ layout_theme = {
 }
 
 layouts = [
-    layout.Columns(**layout_theme),
-    layout.MonadTall(**layout_theme),
+   layout.Columns(**layout_theme),
+#   layout.MonadTall(**layout_theme),
 ]
 
 # ---------------------- WIDGET DEFAULTS ----------------------
@@ -166,6 +166,7 @@ screens = [
                     empty_group_string="I hate python",
                     center_aligned=True,
                 ),
+                widget.Prompt(),
 
                 widget.Sep(linewidth=1, padding=8, foreground="#444444", background="#282c34"),
 
