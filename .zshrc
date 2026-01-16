@@ -103,6 +103,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 alias calc="python3 ~/.config/qtile/scripts/calculator.py"
+alias savegrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+alias :q="exit"
 
 
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
