@@ -6,7 +6,7 @@ Minimal, opinionated dotfiles centered around Qtile on Arch Linux.
 
 - `config/qtile/config.py` Qtile config (keys, groups, layouts, bar/widgets).
 - `config/qtile/scripts/calculator.py` Qtile calculator script.
-- `config/nvim/init.lua` Neovim entrypoint (loads modular Lua config).
+- Neovim config lives here: https://github.com/r3xye/nvim4python
 - `config/alacritty/alacritty.toml` Alacritty font setup.
 - `config/fastfetch/config.jsonc` Fastfetch theme/layout.
 - `config/cava/config` CAVA defaults (mostly commented).
@@ -21,7 +21,7 @@ Minimal, opinionated dotfiles centered around Qtile on Arch Linux.
 
 ## Requirements
 
-- Qtile, Picom, Alacritty, Neovim.
+- Qtile, Picom, Alacritty, Neovim (see https://github.com/r3xye/nvim4python).
 - Fonts: Nerd Font variants (FiraCode Nerd Font, MesloLGS Nerd Font).
 - Optional: fastfetch, cava, flameshot, Telegram, Discord, Steam.
 
@@ -32,7 +32,6 @@ Copy what you need:
 
 ```bash
 cp -r "$PWD/config/qtile" ~/.config/qtile
-cp -r "$PWD/config/nvim" ~/.config/nvim
 cp -r "$PWD/config/alacritty" ~/.config/alacritty
 cp -r "$PWD/config/fastfetch" ~/.config/fastfetch
 cp -r "$PWD/config/cava" ~/.config/cava
@@ -44,3 +43,4 @@ cp "$PWD/config/.zshrc" ~/.zshrc
 - Qtile autostart runs `xset -b` and `picom --daemon` in `config/qtile/config.py`.
 - Network widget expects `wlan0`; adjust in `config/qtile/config.py` if needed.
 - Update widget assumes Arch (`pacman -Syu`).
+- Neovim config: https://github.com/r3xye/nvim4python
