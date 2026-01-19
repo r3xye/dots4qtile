@@ -5,7 +5,7 @@ Minimal, opinionated dotfiles centered around Qtile on Arch Linux.
 ## Contents
 
 - `config/qtile/config.py` Qtile config (keys, groups, layouts, bar/widgets).
-- `config/qtile/autostart.sh` Autostart hook (currently empty).
+- `config/qtile/scripts/calculator.py` Qtile calculator script.
 - `config/nvim/init.lua` Neovim entrypoint (loads modular Lua config).
 - `config/alacritty/alacritty.toml` Alacritty font setup.
 - `config/fastfetch/config.jsonc` Fastfetch theme/layout.
@@ -28,15 +28,15 @@ Minimal, opinionated dotfiles centered around Qtile on Arch Linux.
 ## Install (manual)
 
 This repo is structured like `~/.config` with Zsh config stored under `config/`.
-Copy or symlink what you need:
+Copy what you need:
 
 ```bash
-ln -s "$PWD/config/qtile" ~/.config/qtile
-ln -s "$PWD/config/nvim" ~/.config/nvim
-ln -s "$PWD/config/alacritty" ~/.config/alacritty
-ln -s "$PWD/config/fastfetch" ~/.config/fastfetch
-ln -s "$PWD/config/cava" ~/.config/cava
-ln -s "$PWD/config/.zshrc" ~/.zshrc
+cp -r "$PWD/config/qtile" ~/.config/qtile
+cp -r "$PWD/config/nvim" ~/.config/nvim
+cp -r "$PWD/config/alacritty" ~/.config/alacritty
+cp -r "$PWD/config/fastfetch" ~/.config/fastfetch
+cp -r "$PWD/config/cava" ~/.config/cava
+cp "$PWD/config/.zshrc" ~/.zshrc
 ```
 
 ## Notes
