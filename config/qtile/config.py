@@ -129,6 +129,12 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+# ----------------------WALLPAPER------------------------
+
+wallpaper = None
+for i in {"jpg", "png"}:
+    wallpaper = f"/home/r3xye/wallpapers/1.{i}"
+
 # ---------------------- SCREENS ----------------------
 screens = [
     Screen(
@@ -201,7 +207,7 @@ screens = [
             28,
             background="#1c1f24"
         ),
-        wallpaper="/home/r3xye/wallpapers/1.jpg",
+        wallpaper=wallpaper,
         wallpaper_mode="fill",
     ),
 ]
