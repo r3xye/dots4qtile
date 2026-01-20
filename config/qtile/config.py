@@ -133,7 +133,10 @@ extension_defaults = widget_defaults.copy()
 
 wallpaper = None
 for i in {"jpg", "png"}:
-    wallpaper = f"/home/r3xye/wallpapers/1.{i}"
+    path = f"/home/r3xye/wallpapers/1.{i}"
+    if os.path.exists(path):
+        wallpaper = path
+        break
 
 # ---------------------- SCREENS ----------------------
 screens = [
