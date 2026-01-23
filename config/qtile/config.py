@@ -108,12 +108,30 @@ for i in groups:
         Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True), desc=f"Move focused window to group {i.name}"),
     ])
 
+# ---------------------- THEME (Gruvbox Dark) ----------------------
+gruvbox = {
+    "bg0": "#1d2021",
+    "bg1": "#3c3836",
+    "bg2": "#504945",
+    "bg3": "#665c54",
+    "fg": "#ebdbb2",
+    "fg1": "#fbf1c7",
+    "gray": "#928374",
+    "red": "#cc241d",
+    "green": "#98971a",
+    "yellow": "#d79921",
+    "blue": "#458588",
+    "purple": "#b16286",
+    "aqua": "#689d6a",
+    "orange": "#d65d0e",
+}
+
 # ---------------------- LAYOUTS ----------------------
 layout_theme = {
     "border_width": 4,
-    "margin": 1,
-    "border_focus": "#3a0f5e",
-    "border_normal": "#200a40"
+    "margin": 0,
+    "border_focus": gruvbox["blue"],
+    "border_normal": gruvbox["bg2"],
 }
 
 layouts = [
@@ -126,6 +144,8 @@ widget_defaults = dict(
     font="FiraCode Nerd Font",
     fontsize=12,
     padding=3,
+    foreground=gruvbox["fg"],
+    background=gruvbox["bg0"],
 )
 extension_defaults = widget_defaults.copy()
 
@@ -146,11 +166,11 @@ screens = [
                 widget.TextBox(
                     text=" Tilted ",
                     fontsize=16,
-                    foreground="#000000",
-                    background="#ffffff",
+                    foreground=gruvbox["fg1"],
+                    background=gruvbox["bg1"],
                     padding=8,
                 ),
-                widget.Sep(linewidth=1, padding=8, foreground="#444444", background="#282c34"),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
                 widget.GroupBox(
                     font="FiraCode Nerd Font",
                     fontsize=12,
@@ -159,17 +179,17 @@ screens = [
                     padding_y=6,
                     padding_x=8,
                     borderwidth=2,
-                    active="#61afef",      
-                    inactive="#5c6370",
+                    active=gruvbox["blue"],
+                    inactive=gruvbox["gray"],
                     rounded=False, 
                     highlight_method="block",
-                    block_highlight_text_color="#ffffff",
+                    block_highlight_text_color=gruvbox["fg1"],
                 ),
-                widget.Sep(linewidth=1, padding=8, foreground="#444444", background="#282c34"),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
                 widget.WindowName(
                     font="FiraCode Nerd Font",
                     fontsize=13,
-                    foreground="#e5e9f0",
+                    foreground=gruvbox["fg"],
                     max_chars=20,
                     padding=8,
                     empty_group_string="I hate python",
@@ -177,7 +197,7 @@ screens = [
                 ),
                 widget.Prompt(),
 
-                widget.Sep(linewidth=1, padding=8, foreground="#444444", background="#282c34"),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
 
                 widget.TextBox(text="", fontsize=14, padding=4),
                 widget.CPU(format="{load_percent:2.0f}%", fontsize=12, padding=4),
@@ -201,14 +221,14 @@ screens = [
                     mouse_callbacks={"Button1": lazy.spawn("alacritty -e sudo pacman -Syu")},
                 ),
 
-                widget.Sep(linewidth=1, padding=8, foreground="#444444", background="#282c34"),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
                 widget.TextBox(text="", fontsize=14, padding=4),
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p", fontsize=12, padding=4),
 
                widget.Systray(),
             ],
             28,
-            background="#1c1f24"
+            background=gruvbox["bg0"]
         ),
         wallpaper=wallpaper,
         wallpaper_mode="fill",
