@@ -181,7 +181,7 @@ groups = [
 for name in [str(i) for i in range(1, 10)]:
     keys.extend([
         Key([mod], name, lazy.to_screen(0), lazy.group[name].toscreen(0), desc=f"Switch to group {name} on laptop"),
-        Key([mod, "shift"], name, lazy.window.togroup(name, switch_group=True), desc=f"Move focused window to group {name}"),
+        Key([mod, "shift"], name, lazy.window.togroup(name), lazy.group[name].toscreen(0), lazy.to_screen(0), desc=f"Move focused window to group {name}"),
     ])
 
 external_groups = [(f"e{i}", str(i)) for i in range(1, 10)]
@@ -189,7 +189,7 @@ if external_monitor_connected():
     for name, key in external_groups:
         keys.extend([
             Key(["mod1"], key, lazy.to_screen(1), lazy.group[name].toscreen(1), desc=f"Switch to external group {name}"),
-            Key(["mod1", "shift"], key, lazy.window.togroup(name, switch_group=True), desc=f"Move focused window to external group {name}"),
+            Key(["mod1", "shift"], key, lazy.window.togroup(name), lazy.group[name].toscreen(1), lazy.to_screen(1), desc=f"Move focused window to external group {name}"),
         ])
 
 # ---------------------- THEME (Gruvbox Dark) ----------------------
