@@ -35,14 +35,78 @@ from libqtile.utils import guess_terminal
 mod = "mod4"
 terminal = "alacritty"
 browser = "firefox"
+INTERNAL_OUTPUT = "eDP-1"
+EXTERNAL_OUTPUT = "HDMI-1"
 
 home = os.path.expanduser('~')
+
+def external_monitor_connected():
+    try:
+        out = subprocess.check_output(["xrandr", "--query"], text=True)
+    except Exception:
+        return False
+    for line in out.splitlines():
+        if line.startswith(EXTERNAL_OUTPUT) and " connected" in line:
+            return True
+    return False
+
+def configure_outputs():
+    if qtile.core.name != "x11":
+        return
+    if external_monitor_connected():
+        subprocess.run(
+            [
+                "xrandr",
+                "--output",
+                INTERNAL_OUTPUT,
+                "--auto",
+                "--primary",
+                "--output",
+                EXTERNAL_OUTPUT,
+                "--auto",
+                "--right-of",
+                INTERNAL_OUTPUT,
+            ]
+        )
+    else:
+        subprocess.run(
+            [
+                "xrandr",
+                "--output",
+                EXTERNAL_OUTPUT,
+                "--off",
+                "--output",
+                INTERNAL_OUTPUT,
+                "--auto",
+                "--primary",
+            ]
+        )
 
 # Autostart
 @hook.subscribe.startup_once
 def autostart():
     subprocess.run(['xset', '-b'])
     subprocess.Popen(["picom", "--daemon"])
+    # Keep default groups on their intended screens when a second monitor exists.
+    if len(qtile.screens) > 1:
+        qtile.groups_map["1"].toscreen(0)
+        qtile.groups_map["e1"].toscreen(1)
+    configure_outputs()
+
+@hook.subscribe.screen_change
+def _reconfigure_outputs(event=None):
+    configure_outputs()
+
+@hook.subscribe.setgroup
+def _warp_pointer_to_group():
+    if qtile.core.name != "x11":
+        return
+    screen = qtile.current_screen
+    if screen is None:
+        return
+    x = screen.x + (screen.width // 2)
+    y = screen.y + (screen.height // 2)
+    qtile.core.warp_pointer(x, y)
 
 # ---------------------- KEYS ----------------------
 keys = [
@@ -92,22 +156,41 @@ for vt in range(1, 8):
 
 # ---------------------- GROUPS ----------------------
 groups = [
-    Group("1", label="I"),
-    Group("2", label="II"),
-    Group("3", label="III"),
-    Group("4", label="IV"),
-    Group("5", label="V"),
-    Group("6", label="VI"),
-    Group("7", label="VII"),
-    Group("8", label="VIII"),
-    Group("9", label="IX"),
+    # Laptop groups (I - IX)
+    Group("1", label="I", screen_affinity=0),
+    Group("2", label="II", screen_affinity=0),
+    Group("3", label="III", screen_affinity=0),
+    Group("4", label="IV", screen_affinity=0),
+    Group("5", label="V", screen_affinity=0),
+    Group("6", label="VI", screen_affinity=0),
+    Group("7", label="VII", screen_affinity=0),
+    Group("8", label="VIII", screen_affinity=0),
+    Group("9", label="IX", screen_affinity=0),
+    # External monitor groups (1 - 9)
+    Group("e1", label="1", screen_affinity=1),
+    Group("e2", label="2", screen_affinity=1),
+    Group("e3", label="3", screen_affinity=1),
+    Group("e4", label="4", screen_affinity=1),
+    Group("e5", label="5", screen_affinity=1),
+    Group("e6", label="6", screen_affinity=1),
+    Group("e7", label="7", screen_affinity=1),
+    Group("e8", label="8", screen_affinity=1),
+    Group("e9", label="9", screen_affinity=1),
 ]
 
-for i in groups:
+for name in [str(i) for i in range(1, 10)]:
     keys.extend([
-        Key([mod], i.name, lazy.group[i.name].toscreen(), desc=f"Switch to group {i.name}"),
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True), desc=f"Move focused window to group {i.name}"),
+        Key([mod], name, lazy.to_screen(0), lazy.group[name].toscreen(0), desc=f"Switch to group {name} on laptop"),
+        Key([mod, "shift"], name, lazy.window.togroup(name, switch_group=True), desc=f"Move focused window to group {name}"),
     ])
+
+external_groups = [(f"e{i}", str(i)) for i in range(1, 10)]
+if external_monitor_connected():
+    for name, key in external_groups:
+        keys.extend([
+            Key(["mod1"], key, lazy.to_screen(1), lazy.group[name].toscreen(1), desc=f"Switch to external group {name}"),
+            Key(["mod1", "shift"], key, lazy.window.togroup(name, switch_group=True), desc=f"Move focused window to external group {name}"),
+        ])
 
 # ---------------------- THEME (Gruvbox Dark) ----------------------
 gruvbox = {
@@ -188,6 +271,7 @@ screens = [
                     rounded=False, 
                     highlight_method="block",
                     block_highlight_text_color=gruvbox["fg1"],
+                    visible_groups=["1", "2", "3", "4", "5", "6", "7", "8", "9"],
                 ),
                 widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
                 widget.WindowName(
@@ -237,6 +321,75 @@ screens = [
         wallpaper=wallpaper,
         wallpaper_mode="fill",
     ),
+    Screen(
+        top=bar.Bar(
+            [
+                widget.TextBox(
+                    text=" Tilted ",
+                    fontsize=16,
+                    foreground=gruvbox["fg1"],
+                    background=gruvbox["bg1"],
+                    padding=8,
+                ),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
+                widget.GroupBox(
+                    font="FiraCode Nerd Font",
+                    fontsize=12,
+                    margin_y=3,
+                    margin_x=0,
+                    padding_y=6,
+                    padding_x=8,
+                    borderwidth=2,
+                    active=gruvbox["blue"],
+                    inactive=gruvbox["gray"],
+                    this_current_screen_border=gruvbox["orange"],
+                    this_screen_border=gruvbox["bg2"],
+                    highlight_color=gruvbox["bg2"],
+                    rounded=False,
+                    highlight_method="block",
+                    block_highlight_text_color=gruvbox["fg1"],
+                    visible_groups=["e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9"],
+                ),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
+                widget.WindowName(
+                    font="FiraCode Nerd Font",
+                    fontsize=13,
+                    foreground=gruvbox["fg"],
+                    max_chars=20,
+                    padding=8,
+                    empty_group_string="I hate python",
+                    center_aligned=True,
+                ),
+                widget.Prompt(),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
+                widget.TextBox(text="", fontsize=14, padding=4),
+                widget.CPU(format="{load_percent:2.0f}%", fontsize=12, padding=4),
+                widget.TextBox(text="", fontsize=14, padding=4),
+                widget.Memory(format="{MemUsed:.0f}{mm}", fontsize=12, padding=4),
+                widget.TextBox(text="", fontsize=14, padding=4),
+                widget.Net(interface="wlan0", format="{down}", fontsize=12, padding=4),
+                widget.TextBox(text="", fontsize=14, padding=4),
+                widget.Battery(format="{percent:2.0%}", fontsize=12, padding=4),
+                widget.TextBox(text="", fontsize=14, padding=4),
+                widget.CheckUpdates(
+                    distro="Arch",
+                    no_update_string="0",
+                    display_format="{updates}",
+                    fontsize=12,
+                    padding=4,
+                    mouse_callbacks={"Button1": lazy.spawn("alacritty -e sudo pacman -Syu")},
+                ),
+                widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
+                widget.TextBox(text="", fontsize=14, padding=4),
+                widget.Clock(format="%Y-%m-%d %a %I:%M %p", fontsize=12, padding=4),
+                widget.Systray(),
+            ],
+            28,
+            background=gruvbox["bg0"],
+        ),
+        wallpaper=wallpaper,
+        wallpaper_mode="fill",
+    ),
 ]
 
 # ---------------------- MOUSE ----------------------
@@ -261,6 +414,7 @@ floating_layout = layout.Floating(
 
 auto_fullscreen = True
 focus_on_window_activation = "smart"
+follow_mouse_focus = False
 focus_previous_on_window_remove = False
 reconfigure_screens = True
 auto_minimize = True
