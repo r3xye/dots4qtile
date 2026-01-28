@@ -86,6 +86,8 @@ def configure_outputs():
 @hook.subscribe.startup_once
 def autostart():
     subprocess.run(['xset', '-b'])
+    subprocess.Popen(['xset', 's', 'off'])
+    subprocess.Popen(['xset', '-dpms'])
     subprocess.Popen(["picom", "--daemon"])
     # Keep default groups on their intended screens when a second monitor exists.
     if len(qtile.screens) > 1:
@@ -98,6 +100,10 @@ def _reconfigure_outputs(event=None):
     configure_outputs()
 
 @hook.subscribe.setgroup
+def focus_window_on_group():
+    if qtile.current_group and qtile.current_group.windows:
+        qtile.current_group.focus(qtile.current_group.windows[0], warp=False)
+
 def _warp_pointer_to_group():
     if qtile.core.name != "x11":
         return
@@ -219,8 +225,8 @@ layout_theme = {
 }
 
 layouts = [
-   layout.Columns(**layout_theme),
-#   layout.MonadTall(**layout_theme),
+   layout.Bsp(**layout_theme),
+   layout.Columns(**layout_theme)
 ]
 
 # ---------------------- WIDGET DEFAULTS ----------------------
@@ -247,12 +253,13 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.TextBox(
-                    text=" Tilted ",
-                    fontsize=16,
+                widget.CurrentLayout(
                     foreground=gruvbox["fg1"],
                     background=gruvbox["bg1"],
-                    padding=8,
+                    padding=10,
+                    fmt=" {}",
+                    font="FiraCode Nerd Font",
+                    fontsize=18,
                 ),
                 widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
                 widget.GroupBox(
@@ -357,7 +364,7 @@ screens = [
                     foreground=gruvbox["fg"],
                     max_chars=20,
                     padding=8,
-                    empty_group_string="I hate python",
+                    empty_group_string="monitor 2",
                     center_aligned=True,
                 ),
                 widget.Prompt(),
@@ -382,7 +389,6 @@ screens = [
                 widget.Sep(linewidth=1, padding=8, foreground=gruvbox["bg3"], background=gruvbox["bg0"]),
                 widget.TextBox(text="", fontsize=14, padding=4),
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p", fontsize=12, padding=4),
-                widget.Systray(),
             ],
             28,
             background=gruvbox["bg0"],
