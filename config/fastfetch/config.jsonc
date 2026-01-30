@@ -1,13 +1,19 @@
 {
    // "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     "logo": {
-        "type": "builtin",
-        "height": 15,
-        "width": 30,
+        "type": "kitty",
+        "source": "/home/r3xye/.config/fastfetch/1_with_text.png",
+        "height": 30,
+        "width": 36,
+        "preserveAspectRatio": false,
+        "recache": true,
         "padding": {
-            "top": 5,
+            "top": 0,
             "left": 3
         }
+    },
+    "display": {
+        "showErrors": true
     },
     "modules": [
         "break",
@@ -142,4 +148,3 @@
  
     ]
 }
-
