@@ -105,6 +105,7 @@ source $ZSH/oh-my-zsh.sh
 alias calc="python3 ~/.config/qtile/scripts/calculator.py"
 alias savegrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias :q="exit"
+alias windows="virtualbox"
 
 
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -113,6 +114,43 @@ alias :q="exit"
 # - $ZSH_CUSTOM/aliases.zsh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
+# Pure zsh auto-venv: activate .venv/venv in current or parent dirs on cd.
+autoload -U add-zsh-hook
+typeset -g _AUTO_VENV_ACTIVE=""
+
+_auto_venv() {
+  local dir="$PWD"
+  local venv_path=""
+  local candidate=""
+
+  while [[ "$dir" != "/" ]]; do
+    for candidate in .venv venv; do
+      if [[ -x "$dir/$candidate/bin/python" ]]; then
+        venv_path="$dir/$candidate"
+        break 2
+      fi
+    done
+    dir="${dir:h}"
+  done
+
+  if [[ -n "$venv_path" ]]; then
+    if [[ "$VIRTUAL_ENV" != "$venv_path" ]]; then
+      if [[ -n "$VIRTUAL_ENV" && -n "$_AUTO_VENV_ACTIVE" && "$VIRTUAL_ENV" == "$_AUTO_VENV_ACTIVE" ]] && typeset -f deactivate >/dev/null; then
+        deactivate >/dev/null 2>&1
+      fi
+      source "$venv_path/bin/activate"
+      export _AUTO_VENV_ACTIVE="$venv_path"
+    fi
+  else
+    if [[ -n "$VIRTUAL_ENV" && -n "$_AUTO_VENV_ACTIVE" && "$VIRTUAL_ENV" == "$_AUTO_VENV_ACTIVE" ]] && typeset -f deactivate >/dev/null; then
+      deactivate >/dev/null 2>&1
+      unset _AUTO_VENV_ACTIVE
+    fi
+  fi
+}
+
+add-zsh-hook chpwd _auto_venv
+_auto_venv
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
